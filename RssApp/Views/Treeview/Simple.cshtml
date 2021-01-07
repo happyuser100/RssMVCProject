@@ -133,10 +133,11 @@
                 e.preventDefault();
                 var href = $(this).attr("href");
                 var id = $(this).attr("data-id");
+                var menuName = $(this).attr("data-menuName");
                 if (id == "1")
                     $('.details').load('@Url.Action("RSSFavorites", "RSSFeed")');
                 else if (id != "2")
-                   $('.details').load('@Url.Action("Details", "RSSFeed")', { href: href});
+                    $('.details').load('@Url.Action("Details", "RSSFeed")', { href: href, menuName: menuName});
             });
 
         });

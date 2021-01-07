@@ -18,31 +18,44 @@ namespace RssApp.Controllers
 
         public ActionResult Simple()
         {
-            List<MenuItem> all = new List<MenuItem>();
-            using (RssDBEntities dc = new RssDBEntities())
+            try
             {
-                all = dc.MenuItems.OrderBy(a => a.ParentMenuID).ToList();
+                List<MenuItem> all = new List<MenuItem>();
+                using (RssDBEntities dc = new RssDBEntities())
+                {
+                    all = dc.MenuItems.OrderBy(a => a.ParentMenuID).ToList();
+                }
+                ViewBag.rSSItems = all;
+                return View();
             }
-            ViewBag.rSSItems = all;
-            return View();
-            //return View(all);
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(500);
+            }
         }
 
         [HttpPost]
         public ActionResult AddFeed(RSSFeed rSSFeed)
         {
-            using (RssDBEntities dc = new RssDBEntities())
+            try
             {
-                MenuItem menuItem = new MenuItem();
-                menuItem.MenuName = rSSFeed.Title;
-                menuItem.NavURL = rSSFeed.Link;
-                menuItem.ParentMenuID = FEEDS;
+                using (RssDBEntities dc = new RssDBEntities())
+                {
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.MenuName = rSSFeed.Title;
+                    menuItem.NavURL = rSSFeed.Link;
+                    menuItem.ParentMenuID = FEEDS;
 
-                dc.MenuItems.Add(menuItem);
-                dc.SaveChanges();
+                    dc.MenuItems.Add(menuItem);
+                    dc.SaveChanges();
+                }
+                TempData["notice"] = "Successfully Added";
+                return RedirectToAction("Simple");
             }
-            TempData["notice"] = "Successfully Added";
-            return RedirectToAction("Simple");
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(500);
+            }
         }
     }
 }

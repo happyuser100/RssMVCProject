@@ -75,4 +75,3 @@ C:\DrushimTask\Drushim\RssApp\RssApp\obj\Debug\RssApp.csproj.CoreCompileInputs.c
 C:\DrushimTask\Drushim\RssApp\RssApp\obj\Debug\RssApp.csproj.CopyComplete
 C:\DrushimTask\Drushim\RssApp\RssApp\obj\Debug\RssApp.dll
 C:\DrushimTask\Drushim\RssApp\RssApp\obj\Debug\RssApp.pdb
-C:\DrushimTask\Drushim\RssApp\RssApp\obj\Debug\RssApp.csprojAssemblyReference.cache

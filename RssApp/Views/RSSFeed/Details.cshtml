@@ -7,48 +7,61 @@
         width: 200px;
     }
 </style>
-
-<input type="text" class="search" />
-<br />
-<div style="padding-top:15px">
-
-    @if (ViewBag.RSSFeed != null)
-    {
-        foreach (var item in ViewBag.RSSFeed)
-        {
-    <div style="float:left; width: 70%;">
-        <div>
-            <strong>@item.Title</strong>
-        </div>
-
-        <div>
-            @item.Description
-        </div>
-        <div>
-            <a href="@item.Link">@item.Link</a>
-        </div>
-    </div>
-
-            <div style="float:left; width: 30%; padding-left: 20px;">
-                <img width="50" height="50" src="@item.Source" alt="" />
+        <div style="width: 100%;">
+            <div style="float:left; width: 60%;">
+                <h3><strong>@ViewBag.MenuName</strong></h3>
             </div>
-        }
-    }
 
-</div>
+            <div style="float:right; width: 40%;">
+                <input type="text" class="search" />
+            </div>
+        </div>
 
-@* Here We need some Jquery code to handle text box *@
-@section Scripts{
-    <script>
+       <br />
+       <div style="clear:both;padding-top:15px">
+
+           @if (ViewBag.RSSFeed != null)
+           {
+               foreach (var item in ViewBag.RSSFeed)
+               {
+                   <div style="float:left; width: 70%;">
+                       <div>
+                           <strong>@item.Title</strong>
+                       </div>
+
+                       <div>
+                           @item.Description
+                       </div>
+                       <div>
+                           <a href="@item.Link">@item.Link</a>
+                       </div>
+                   </div>
+
+                   <div style="float:left; width: 30%; padding-left: 20px;">
+                       <img width="50" height="50" src="@item.Source" alt="" />
+                   </div>
+               }
+           }
+
+       </div>
+       <input type="hidden" name="MenuName" id="MenuName" value="@ViewBag.MenuName" />
+
+
+       @* Here We need some Jquery code to handle text box *@
+       @section Scripts{
+           <script>
 $(document).ready(function () {
     debugger
     //alert("In Details");
 
     $('.search').on('input', function (e) {
         debugger
+        //alert($('input#MenuName').val());
         //alert("The text has been changed.");
         var search = $(".search").val();
-        $('.details').load('@Url.Action("SearchDetails", "RSSFeed")', { search: search});
+        var menuName = $('input#MenuName').val()
+
+        $('.details').load('@Url.Action("SearchDetails", "RSSFeed")', { search: search, menuName: menuName});
 
     });
 
@@ -56,8 +69,8 @@ $(document).ready(function () {
     //});
 
 });
-    </script>
-}
+           </script>
+       }
 
 
 
