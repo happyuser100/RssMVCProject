@@ -9,46 +9,52 @@
     }
 </style>
 
-<input type="text" class="search" />
+<input type="text" class="search" value="@ViewBag.Search" />
+<br />
+<div style="padding-top:15px">
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Link</th>
-            <th>Description</th>
-            <th>Publish Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ViewBag.RSSFeed != null)
+    @if (ViewBag.RSSFeed != null)
+    {
+        foreach (var item in ViewBag.RSSFeed)
         {
-            foreach (var item in ViewBag.RSSFeed)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td><a href="@item.Link">@item.Link</a></td>
-                    <td>@item.Description</td>
-                    @*<td>@item.PubDate</td>*@
+    <div style="float:left; width: 70%;">
+        <div>
+            <strong>@item.Title</strong>
+        </div>
 
-                    <td><img src="@item.Source" alt="" /></td>
-                </tr>
-            }
+        <div>
+            @item.Description
+        </div>
+
+        <div>
+            <a href="@item.Link">@item.Link</a>
+        </div>
+    </div>
+
+            <div style="float:left; width: 30%; padding-left: 20px;">
+                <img width="50" height="50" src="@item.Source" alt="" />
+            </div>
         }
-    </tbody>
-</table>
+    }
+
+</div>
 
 @* Here We need some Jquery code to hanle text box *@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            alert("In Details");
 
-            $(".search").change(function () {
-                alert("The text has been changed.");
-                var search = $(".search").val();
-                $('.details').load('@Url.Action("SearchDetails", "RSSFeed")', { search: search});
-            });
+         $('.search').on('input', function (e) {
+            debugger
+            //alert("The text has been changed.");
+            var search = $(".search").val();
+            $('.details').load('@Url.Action("SearchDetails", "RSSFeed")', { search: search});
+
+         });
+
+
+         //$(".search").change(function () {
+         //});
 
         });
     </script>

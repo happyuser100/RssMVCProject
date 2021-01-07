@@ -55,7 +55,8 @@
     }
 
     .details {
-        float: right !important;
+        float: left !important;
+        padding-left: 50px;
         padding-top: 50px;
         width: 300px !important;
     }
@@ -132,9 +133,9 @@
                 e.preventDefault();
                 var href = $(this).attr("href");
                 var id = $(this).attr("data-id");
-                @*if (id == "1")
+                if (id == "1")
                     $('.details').load('@Url.Action("RSSFavorites", "RSSFeed")');
-                else if (id != "2")*@
+                else if (id != "2")
                    $('.details').load('@Url.Action("Details", "RSSFeed")', { href: href});
             });
 

@@ -19,8 +19,12 @@ namespace RssApp.Controllers
 
         public ActionResult Details(string href)
         {
-            TempData["rss"] = "";
+            if (string.IsNullOrEmpty(href))
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Parameter search not found");
+
+            Session["rss"] = "";
             ViewBag.URL = href;
+            ViewBag.Search = "";
 
             WebClient wclient = new WebClient();
             string RSSData = wclient.DownloadString(href);
@@ -37,15 +41,24 @@ namespace RssApp.Controllers
                                    Source = (x.Element("enclosure") == null) ? "" : (string)x.Element("enclosure").Attribute("url").Value
                                });
             ViewBag.RSSFeed = RSSFeedData;
-            TempData["rss"] = RSSFeedData;
+            Session["rss"] = RSSFeedData;
             return View();
         }
 
         public ActionResult SearchDetails(string search)
         {
-            var RSSFeedData = TempData["rss"] as IEnumerable<RSSFeed>;
-            ViewBag.RSSFeed = RSSFeedData.Where(x => x.Title.Contains(search));
-            return View();
+            if (search == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Parameter search not found");
+
+            var RSSFeedData = Session["rss"] as IEnumerable<RSSFeed>;
+            if (RSSFeedData != null)
+            {
+                ViewBag.RSSFeed = RSSFeedData.Where(x => x.Title.Contains(search));
+                ViewBag.Search = search;
+                return View();
+            }
+            else
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "RSSFeedData in Session not found");
         }
 
 
