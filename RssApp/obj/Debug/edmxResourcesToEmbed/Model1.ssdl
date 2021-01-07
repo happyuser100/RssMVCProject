@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RssDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Favorites">
+    <Key>
+      <PropertyRef Name="FavoriteID" />
+    </Key>
+    <Property Name="FavoriteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MenuID" Type="int" Nullable="false" />
+    <Property Name="MenuLink" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MenuItems">
+    <Key>
+      <PropertyRef Name="MenuID" />
+    </Key>
+    <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MenuName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="NavURL" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="ParentMenuID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Favorites_MenuItems">
+    <End Role="MenuItems" Type="Self.MenuItems" Multiplicity="1" />
+    <End Role="Favorites" Type="Self.Favorites" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MenuItems">
+        <PropertyRef Name="MenuID" />
+      </Principal>
+      <Dependent Role="Favorites">
+        <PropertyRef Name="MenuID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="RssDBModelStoreContainer">
+    <EntitySet Name="Favorites" EntityType="Self.Favorites" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MenuItems" EntityType="Self.MenuItems" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Favorites_MenuItems" Association="Self.FK_Favorites_MenuItems">
+      <End Role="MenuItems" EntitySet="MenuItems" />
+      <End Role="Favorites" EntitySet="Favorites" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

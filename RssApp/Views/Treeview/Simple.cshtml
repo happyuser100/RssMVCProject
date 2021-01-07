@@ -1,0 +1,148 @@
+﻿@model RssApp.Models.RSSFeed
+
+@{
+    ViewBag.Title = "Rss Form";
+}
+<style>
+    /*Here styles for treeview*/
+    .collapse {
+        width: 15px;
+        background-image: url('../Images/ui-icons_454545_256x240.png');
+        background-repeat: no-repeat;
+        background-position: -36px -17px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .expand {
+        width: 15px;
+        background-image: url('../Images/ui-icons_454545_256x240.png');
+        background-repeat: no-repeat;
+        background-position: -50px -17px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .treeview ul {
+        font: 14px Arial, Sans-Serif;
+        margin: 0px;
+        padding-left: 20px;
+        list-style: none;
+    }
+
+    .treeview > li > a {
+        font-weight: bold;
+    }
+
+    .treeview li {
+    }
+
+    .treeview li a {
+            padding: 4px;
+            font-size: 12px;
+            display: inline-block;
+            text-decoration: none;
+            width: auto;
+    }
+
+    .leftpart {
+        float: left  !important;
+        padding-top: 50px;
+    }
+
+    .treeview {
+        width: 300px !important;
+    }
+
+    .details {
+        float: right !important;
+        padding-top: 50px;
+        width: 300px !important;
+    }
+
+    .padLeft {
+        padding-left: 20px;
+    }
+
+</style>
+<h2 class="padLeft">RSS Items</h2>
+@*style="border:solid 1px black; padding:10px; background-color:#FAFAFA"*@
+<div>
+    <div class="leftpart">
+        <div class="treeview">
+            @if (ViewBag.rSSItems != null && Enumerable.Count(ViewBag.rSSItems) > 0)
+            {
+                <ul>
+                    @Treeview.GetTreeView(ViewBag.rSSItems, (ViewBag.rSSItems as ICollection<RssApp.MenuItem>).FirstOrDefault().ParentMenuID)
+                </ul>
+            }
+        </div>
+
+        <div class="padLeft">
+            @if (TempData["notice"] != null)
+            {
+                <p class="alert-success">@TempData["notice"]</p>
+            }
+
+            @using (Html.BeginForm("AddFeed", "Treeview", FormMethod.Post))
+            {
+                <h2>Add New Feed</h2>
+
+                <div class="form-group row">
+                    <label for="feedName" class="col-sm-2 col-form-label">Feed Name</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(a => a.Title, null, new { id = "feedName", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="feedURL" class="col-sm-2 col-form-label">URL</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(a => a.Link, null, new { id = "feedURL", @class = "form-control" })
+                    </div>
+                </div>
+
+                @*<input type="text" name="Id" placeholder="..." class="form-control" value="@ViewBag.id" style="min-width:100%" />
+                  <input type="URL" name="RSSURL" placeholder="Enter RSS Feed URL Here..." class="form-control" value="@ViewBag.URL" style="min-width:100%" />*@
+                <br />
+                <input type="submit" class="btn primary" value="Add" />
+            }
+
+        </div>
+
+    </div>
+
+    <div class="details">
+
+    </div>
+</div>
+
+@* Treeview collapsible *@
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+            $(".collapsible").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("collapse expand");
+                $(this).closest('li').children('ul').slideToggle();
+            });
+
+            $(".treeview ul li a").click(function (e) {
+                debugger
+                e.preventDefault();
+                var href = $(this).attr("href");
+                var id = $(this).attr("data-id");
+                @*if (id == "1")
+                    $('.details').load('@Url.Action("RSSFavorites", "RSSFeed")');
+                else if (id != "2")*@
+                   $('.details').load('@Url.Action("Details", "RSSFeed")', { href: href});
+            });
+
+        });
+    </script>
+}
+
+
+
+
+

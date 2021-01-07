@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Details";
+}
+
+<style>
+    .search
+    {
+        width:200px;
+    }
+
+</style>
+
+@*@using (Html.BeginForm())
+    {
+        <input type="text" name="Id" placeholder="..." class="form-control" value="@ViewBag.id" style="min-width:100%" />
+        <input type="URL" name="RSSURL" placeholder="Enter RSS Feed URL Here..." class="form-control" value="@ViewBag.URL" style="min-width:100%" />
+        <br />
+        <input type="submit" class="btn btn-danger" />
+    }*@
+
+<input type="text"  class="search" />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Description</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.RSSFeed != null)
+        {
+            foreach (var item in ViewBag.RSSFeed)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td><a href="@item.Link">@item.Link</a></td>
+                    <td>@item.Description</td>
+                    <td><img width="50" height="50" src="@item.Source" alt="" /></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@* Here We need some Jquery code to handle text box *@
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            debugger
+            //alert("In Details");
+
+            $(".search").change(function () {
+                debugger
+                //alert("The text has been changed.");
+                var search = $(".search").val();
+                $('.details').load('@Url.Action("SearchDetails", "RSSFeed")', { search: search});
+            });
+
+        });
+    </script>
+}
+
+
+
+

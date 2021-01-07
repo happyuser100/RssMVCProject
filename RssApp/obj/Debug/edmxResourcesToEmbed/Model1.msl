@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="RssDBModelStoreContainer" CdmEntityContainer="RssDBEntities">
+    <EntitySetMapping Name="MenuItems">
+      <EntityTypeMapping TypeName="RssDBModel.MenuItem">
+        <MappingFragment StoreEntitySet="MenuItems">
+          <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+          <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+          <ScalarProperty Name="NavURL" ColumnName="NavURL" />
+          <ScalarProperty Name="ParentMenuID" ColumnName="ParentMenuID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Favorites">
+      <EntityTypeMapping TypeName="RssDBModel.Favorite">
+        <MappingFragment StoreEntitySet="Favorites">
+          <ScalarProperty Name="MenuLink" ColumnName="MenuLink" />
+          <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+          <ScalarProperty Name="FavoriteID" ColumnName="FavoriteID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

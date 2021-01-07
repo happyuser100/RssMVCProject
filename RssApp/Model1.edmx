@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RssDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Favorites">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuID" Type="int" Nullable="false" />
+          <Property Name="MenuLink" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MenuItems">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="NavURL" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ParentMenuID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Favorites_MenuItems">
+          <End Role="MenuItems" Type="Self.MenuItems" Multiplicity="1" />
+          <End Role="Favorites" Type="Self.Favorites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenuItems">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="Favorites">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RssDBModelStoreContainer">
+          <EntitySet Name="Favorites" EntityType="Self.Favorites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MenuItems" EntityType="Self.MenuItems" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Favorites_MenuItems" Association="Self.FK_Favorites_MenuItems">
+            <End Role="MenuItems" EntitySet="MenuItems" />
+            <End Role="Favorites" EntitySet="Favorites" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RssDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MenuItem">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NavURL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ParentMenuID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Favorites" Relationship="RssDBModel.FK_Favorites_MenuItems" FromRole="MenuItem" ToRole="Favorite" />
+        </EntityType>
+        <EntityContainer Name="RssDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MenuItems" EntityType="Self.MenuItem" />
+          <EntitySet Name="Favorites" EntityType="RssDBModel.Favorite" />
+          <AssociationSet Name="FK_Favorites_MenuItems" Association="RssDBModel.FK_Favorites_MenuItems">
+            <End Role="MenuItem" EntitySet="MenuItems" />
+            <End Role="Favorite" EntitySet="Favorites" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Favorite">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuID" Type="Int32" Nullable="false" />
+          <Property Name="MenuLink" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MenuItem" Relationship="RssDBModel.FK_Favorites_MenuItems" FromRole="Favorite" ToRole="MenuItem" />
+        </EntityType>
+        <Association Name="FK_Favorites_MenuItems">
+          <End Type="RssDBModel.MenuItem" Role="MenuItem" Multiplicity="1" />
+          <End Type="RssDBModel.Favorite" Role="Favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenuItem">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="Favorite">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RssDBModelStoreContainer" CdmEntityContainer="RssDBEntities">
+          <EntitySetMapping Name="MenuItems">
+            <EntityTypeMapping TypeName="RssDBModel.MenuItem">
+              <MappingFragment StoreEntitySet="MenuItems">
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="NavURL" ColumnName="NavURL" />
+                <ScalarProperty Name="ParentMenuID" ColumnName="ParentMenuID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Favorites">
+            <EntityTypeMapping TypeName="RssDBModel.Favorite">
+              <MappingFragment StoreEntitySet="Favorites">
+                <ScalarProperty Name="MenuLink" ColumnName="MenuLink" />
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="FavoriteID" ColumnName="FavoriteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

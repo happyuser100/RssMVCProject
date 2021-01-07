@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RssDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="MenuItem">
+    <Key>
+      <PropertyRef Name="MenuID" />
+    </Key>
+    <Property Name="MenuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MenuName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="NavURL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ParentMenuID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Favorites" Relationship="RssDBModel.FK_Favorites_MenuItems" FromRole="MenuItem" ToRole="Favorite" />
+  </EntityType>
+  <EntityContainer Name="RssDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="MenuItems" EntityType="Self.MenuItem" />
+    <EntitySet Name="Favorites" EntityType="RssDBModel.Favorite" />
+    <AssociationSet Name="FK_Favorites_MenuItems" Association="RssDBModel.FK_Favorites_MenuItems">
+      <End Role="MenuItem" EntitySet="MenuItems" />
+      <End Role="Favorite" EntitySet="Favorites" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Favorite">
+    <Key>
+      <PropertyRef Name="FavoriteID" />
+    </Key>
+    <Property Name="FavoriteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MenuID" Type="Int32" Nullable="false" />
+    <Property Name="MenuLink" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MenuItem" Relationship="RssDBModel.FK_Favorites_MenuItems" FromRole="Favorite" ToRole="MenuItem" />
+  </EntityType>
+  <Association Name="FK_Favorites_MenuItems">
+    <End Type="RssDBModel.MenuItem" Role="MenuItem" Multiplicity="1" />
+    <End Type="RssDBModel.Favorite" Role="Favorite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MenuItem">
+        <PropertyRef Name="MenuID" />
+      </Principal>
+      <Dependent Role="Favorite">
+        <PropertyRef Name="MenuID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
